@@ -1,8 +1,9 @@
-// File: functions/api/geolocation-proxy.js
+// File: api/geolocation.js
+// Triggering a fresh Vercel build at DATE: 2024-10-15
 
 const axios = require('axios');
 
-exports.main = async (context, sendResponse) => {
+module.exports = async (req, res) => {
   try {
     // This is a free, public API for demo purposes
     const response = await axios.get('http://ip-api.com/json');
@@ -13,15 +14,9 @@ exports.main = async (context, sendResponse) => {
         country_name: response.data.country
     };
 
-    sendResponse({
-      statusCode: 200,
-      body: locationData,
-    });
+    res.status(200).json(locationData);
   } catch (error) {
     console.error("Error calling Geolocation API:", error.message);
-    sendResponse({
-      statusCode: 500,
-      body: { error: "Failed to fetch geolocation data." },
-    });
+    res.status(500).json({ error: "Failed to fetch geolocation data." });
   }
 };
